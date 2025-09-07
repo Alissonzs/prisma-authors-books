@@ -1,0 +1,28 @@
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient()
+
+async function main() {
+  const author = await prisma.author.create({
+    data: {
+      name: 'George R. R. Martin',
+      books: {
+        create: [
+          { title: 'A Game of Thrones' },
+          { title: 'A Clash of Kings' }
+        ]
+      }
+    },
+    include: {
+      books: true
+    }
+  })
+
+  console.log('Autor criado com livros:', author)
+}
+
+main()
+  .catch(e => console.error(e))
+  .finally(async () => {
+    await prisma.$disconnect()
+  })
